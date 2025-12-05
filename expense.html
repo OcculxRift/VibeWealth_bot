@@ -116,6 +116,23 @@
             note: form.note.value?.trim() || null,
         };
 
+// моментально обновляем UI — optimistic update
+Telegram.WebApp.showAlert("Расход добавлен!");
+
+// сохраняем в localStorage изменения мгновенно:
+let cached = JSON.parse(localStorage.getItem("cachedExpenses") || "[]");
+cached.push({
+    amount: payload.amount,
+    category: payload.category,
+    type: payload.type ?? "expense",
+    date: payload.date,
+});
+localStorage.setItem("cachedExpenses", JSON.stringify(cached));
+
+// уходим на дашборд СРАЗУ
+window.location.href = "dashboard.html";
+
+// параллельно отправляем запрос на сервер — тихо и без ожидания
 fetch("https://mbzdqomfhntjgihknwfp.supabase.co/functions/v1/add-transaction", {
     method: "POST",
     headers: {
@@ -125,16 +142,18 @@ fetch("https://mbzdqomfhntjgihknwfp.supabase.co/functions/v1/add-transaction", {
 })
 .then(res => res.json())
 .then(data => {
-    if (data.success) {
-        Telegram.WebApp.showAlert("Расход успешно сохранён!");
-        window.location.href = "dashboard.html";
-    } else {
-        Telegram.WebApp.showAlert("Ошибка сохранения: " + JSON.stringify(data));
+    if (!data.success) {
+        Telegram.WebApp.showAlert(
+            "Не удалось сохранить на сервере, будет загружено позже"
+        );
     }
 })
 .catch(err => {
-    Telegram.WebApp.showAlert("Ошибка соединения");
+    Telegram.WebApp.showAlert(
+        "Не удалось отправить на сервер — будет добавлено при следующем входе"
+    );
 });
+
 
     });
 </script>
