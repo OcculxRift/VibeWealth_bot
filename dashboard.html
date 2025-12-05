@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard | VibeWealth</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="./styles-dashboard.css" />
+</head>
+
+<body>
+
+<div class="page">
+    <div class="header">
+        <div class="header-title">VibeWealth</div>
+        <div class="header-subtitle">Финансовый обзор</div>
+    </div>
+
+    <div class="balance-card">
+        <div>
+            <div class="balance-label">Текущий баланс</div>
+            <div class="balance-amount" id="balanceAmount">0 ₸</div>
+        </div>
+        <button class="btn-add" id="goAddExpense">+</button>
+    </div>
+
+    <div class="section-title">Расходы по категориям</div>
+    <div class="categories">
+
+        <div class="category-item">
+            <div class="category-name">Еда</div>
+            <div class="category-value">35 000 ₸</div>
+        </div>
+
+        <div class="category-item">
+            <div class="category-name">Транспорт</div>
+            <div class="category-value">12 500 ₸</div>
+        </div>
+
+        <div class="category-item">
+            <div class="category-name">Бары</div>
+            <div class="category-value">18 000 ₸</div>
+        </div>
+
+        <div class="category-item">
+            <div class="category-name">Шоппинг</div>
+            <div class="category-value">52 000 ₸</div>
+        </div>
+
+    </div>
+
+    <div class="section-title">Цели & накопления</div>
+    <div class="goals">
+
+        <div class="goal">
+            <div class="goal-header">
+                <span class="goal-title">Подушка безопасности</span>
+                <span class="goal-value">120 000 / 300 000 ₸</span>
+            </div>
+            <div class="goal-progress">
+                <div class="goal-progress-fill" style="width: 40%;"></div>
+            </div>
+        </div>
+
+        <div class="goal">
+            <div class="goal-header">
+                <span class="goal-title">Путешествие</span>
+                <span class="goal-value">40 000 / 150 000 ₸</span>
+            </div>
+            <div class="goal-progress">
+                <div class="goal-progress-fill" style="width: 27%;"></div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+    Telegram.WebApp.ready();
+
+    const tgUser = Telegram.WebApp.initDataUnsafe?.user;
+
+    if (!tgUser) {
+        alert("Открой Mini App через Telegram");
+    }
+
+    // ПРОСТАЯ НАВИГАЦИЯ
+    const btnAddExpense = document.getElementById("goAddExpense");
+
+    btnAddExpense.onclick = () => {
+        window.location.href = "expense.html"; // позже создадим
+    };
+</script>
+
+</body>
+</html>
