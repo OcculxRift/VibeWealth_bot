@@ -106,6 +106,22 @@
   // вставляем баланс на страницу
   document.getElementById("balanceAmount").textContent =
     data.balance + " ₸";
+    // Если есть кэшированные транзакции — применяем их
+let cached = JSON.parse(localStorage.getItem("cachedExpenses") || "[]");
+
+if (cached.length > 0) {
+    
+    // увеличиваем баланс на сумму локальных расходов
+    let additions = cached.reduce((acc, c) => acc + c.amount, 0);
+    
+    let current = parseInt(
+        document.getElementById("balanceAmount").textContent.replace(" ₸", "")
+    );
+
+    document.getElementById("balanceAmount").textContent =
+        (current - additions) + " ₸";
+}
+
     // категории
 data.categories.forEach(c => {
     if (c.category === "food") {
