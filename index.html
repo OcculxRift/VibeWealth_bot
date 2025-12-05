@@ -395,9 +395,10 @@
             Telegram.WebApp.showAlert("Форма добавления расхода (будет позже)");
         };
 
-        document.querySelector("#showDashboardBtn").onclick = () => {
-            Telegram.WebApp.showAlert("Дашборд (будет позже)");
-        };
+    document.querySelector("#showDashboardBtn").onclick = () => {
+        window.location.href = "dashboard.html";
+    };
+
     }
 </script>
 </body>
