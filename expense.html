@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Добавить расход | VibeWealth</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="./styles-dashboard.css" />
+</head>
+
+<body>
+<div class="page page-form">
+    <div class="form-header">
+        <button class="nav-back-btn" id="backToDashboard">←</button>
+        <div class="form-header-text">
+            <div class="form-title">Новый расход</div>
+            <div class="form-subtitle">Укажи сумму, категорию и дату</div>
+        </div>
+    </div>
+
+    <form class="form" id="expenseForm">
+        <div class="field">
+            <label class="field-label" for="amount">Сумма</label>
+            <input
+                id="amount"
+                name="amount"
+                type="number"
+                inputmode="decimal"
+                class="field-input"
+                placeholder="Например, 2500"
+                required
+                min="0"
+                step="0.01"
+            />
+        </div>
+
+        <div class="field">
+            <label class="field-label" for="category">Категория</label>
+            <select id="category" name="category" class="field-input" required>
+                <option value="" disabled selected>Выбери категорию</option>
+                <option value="food">Еда</option>
+                <option value="transport">Транспорт</option>
+                <option value="bars">Бары / заведения</option>
+                <option value="shopping">Шоппинг</option>
+                <option value="gifts">Подарки / девушка</option>
+                <option value="other">Другое</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label class="field-label" for="date">Дата</label>
+            <input
+                id="date"
+                name="date"
+                type="date"
+                class="field-input"
+                required
+            />
+        </div>
+
+        <div class="field">
+            <label class="field-label" for="note">Комментарий</label>
+            <textarea
+                id="note"
+                name="note"
+                class="field-input field-textarea"
+                rows="2"
+                placeholder="Например: обед в кафе"
+            ></textarea>
+        </div>
+
+        <div class="form-buttons">
+            <button type="button" class="btn-secondary" id="cancelBtn">
+                Отмена
+            </button>
+            <button type="submit" class="btn-primary">
+                Сохранить расход
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    Telegram.WebApp.ready();
+    const user = Telegram.WebApp.initDataUnsafe?.user;
+
+    // подставляем сегодняшнюю дату
+    const dateInput = document.getElementById("date");
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const dd = String(today.getDate()).padStart(2, "0");
+    dateInput.value = `${yyyy}-${mm}-${dd}`;
+
+    // кнопка Назад
+    const backBtn = document.getElementById("backToDashboard");
+    backBtn.onclick = () => {
+        window.location.href = "dashboard.html";
+    };
+
+    const cancelBtn = document.getElementById("cancelBtn");
+    cancelBtn.onclick = () => {
+        window.location.href = "dashboard.html";
+    };
+
+    // обработчик формы (пока без Supabase — просто превью)
+    const form = document.getElementById("expenseForm");
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const payload = {
+            telegram_id: user?.id || null,
+            amount: Number(form.amount.value),
+            category: form.category.value,
+            date: form.date.value,
+            note: form.note.value?.trim() || null,
+        };
+
+        // тут позже заменим на fetch в Supabase
+        Telegram.WebApp.showAlert(
+            "Пока просто проверка формы:\n\n" +
+            JSON.stringify(payload, null, 2)
+        );
+    });
+</script>
+</body>
+</html>
