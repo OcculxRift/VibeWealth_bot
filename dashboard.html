@@ -29,22 +29,22 @@
 
         <div class="category-item">
             <div class="category-name">Еда</div>
-            <div class="category-value">35 000 ₸</div>
+            <div class="category-value" id="cat-food">0 ₸</div>
         </div>
 
         <div class="category-item">
             <div class="category-name">Транспорт</div>
-            <div class="category-value">12 500 ₸</div>
+            <div class="category-value" id="cat-transport">0 ₸</div>
         </div>
 
         <div class="category-item">
             <div class="category-name">Бары</div>
-            <div class="category-value">18 000 ₸</div>
+            <div class="category-value" id="cat-bars">0 ₸</div>
         </div>
 
         <div class="category-item">
             <div class="category-name">Шоппинг</div>
-            <div class="category-value">52 000 ₸</div>
+            <div class="category-value" id="cat-shopping">0 ₸</div>
         </div>
 
     </div>
@@ -106,6 +106,22 @@
   // вставляем баланс на страницу
   document.getElementById("balanceAmount").textContent =
     data.balance + " ₸";
+    // категории
+data.categories.forEach(c => {
+    if (c.category === "food") {
+        document.getElementById("cat-food").textContent = c.sum + " ₸";
+    }
+    if (c.category === "transport") {
+        document.getElementById("cat-transport").textContent = c.sum + " ₸";
+    }
+    if (c.category === "bars") {
+        document.getElementById("cat-bars").textContent = c.sum + " ₸";
+    }
+    if (c.category === "shopping") {
+        document.getElementById("cat-shopping").textContent = c.sum + " ₸";
+    }
+});
+
 })
 .catch(() => {
   Telegram.WebApp.showAlert("Не удалось загрузить данные");
