@@ -92,6 +92,25 @@
     btnAddExpense.onclick = () => {
         window.location.href = "expense.html"; // позже создадим
     };
+    fetch("https://mbzdqomfhntjgihknwfp.supabase.co/functions/v1/get-dashboard-data", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({ telegram_id: tgUser.id })
+})
+.then(res => res.json())
+.then(data => {
+  console.log(data);
+
+  // вставляем баланс на страницу
+  document.getElementById("balanceAmount").textContent =
+    data.balance + " ₸";
+})
+.catch(() => {
+  Telegram.WebApp.showAlert("Не удалось загрузить данные");
+});
+
 </script>
 
 </body>
