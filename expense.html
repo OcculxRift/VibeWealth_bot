@@ -116,11 +116,26 @@
             note: form.note.value?.trim() || null,
         };
 
-        // тут позже заменим на fetch в Supabase
-        Telegram.WebApp.showAlert(
-            "Пока просто проверка формы:\n\n" +
-            JSON.stringify(payload, null, 2)
-        );
+fetch("https://mbzdqomfhntjgihknwfp.supabase.co/functions/v1/add-transaction", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+})
+.then(res => res.json())
+.then(data => {
+    if (data.success) {
+        Telegram.WebApp.showAlert("Расход успешно сохранён!");
+        window.location.href = "dashboard.html";
+    } else {
+        Telegram.WebApp.showAlert("Ошибка сохранения: " + JSON.stringify(data));
+    }
+})
+.catch(err => {
+    Telegram.WebApp.showAlert("Ошибка соединения");
+});
+
     });
 </script>
 </body>
