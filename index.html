@@ -390,10 +390,11 @@
                 </button>
             </div>
         `;
+    
+    document.querySelector("#addExpenseBtn").onclick = () => {
+        window.location.href = "expense.html";
+    };
 
-        document.querySelector("#addExpenseBtn").onclick = () => {
-            Telegram.WebApp.showAlert("Форма добавления расхода (будет позже)");
-        };
 
     document.querySelector("#showDashboardBtn").onclick = () => {
         window.location.href = "dashboard.html";
