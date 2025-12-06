@@ -81,6 +81,31 @@
     Telegram.WebApp.ready();
 
     const tgUser = Telegram.WebApp.initDataUnsafe?.user;
+    // Показываем мгновенно старые данные, если есть
+const cachedDashboard = JSON.parse(localStorage.getItem("dashboardCache") || "null");
+
+if (cachedDashboard) {
+    console.log("💾 Загружено из cache:", cachedDashboard);
+
+    document.getElementById("balanceAmount").textContent =
+        cachedDashboard.balance + " ₸";
+
+    cachedDashboard.categories.forEach(c => {
+        if (c.category === "food") {
+            document.getElementById("cat-food").textContent = c.sum + " ₸";
+        }
+        if (c.category === "transport") {
+            document.getElementById("cat-transport").textContent = c.sum + " ₸";
+        }
+        if (c.category === "bars") {
+            document.getElementById("cat-bars").textContent = c.sum + " ₸";
+        }
+        if (c.category === "shopping") {
+            document.getElementById("cat-shopping").textContent = c.sum + " ₸";
+        }
+    });
+}
+
 
     if (!tgUser) {
         alert("Открой Mini App через Telegram");
@@ -102,6 +127,8 @@
 .then(res => res.json())
 .then(data => {
   console.log(data);
+    localStorage.setItem("dashboardCache", JSON.stringify(data));
+
 
   // вставляем баланс на страницу
   document.getElementById("balanceAmount").textContent =
