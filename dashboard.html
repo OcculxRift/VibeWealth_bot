@@ -32,61 +32,50 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 
-<body class="font-main bg-bgDark text-white">
+<body class="font-main bg-[#051E17] text-white">
 
-<div id="container" class="px-4 py-5 min-h-screen">
+<div id="container" class="px-4 py-4 min-h-screen space-y-6">
 
-  <div class="flex justify-between items-center mb-4">
-      <h2 class="text-xl font-bold">Финансовый обзор</h2>
-      <button id="addBtn" class="text-3xl leading-none">+</button>
-  </div>
+    <!-- Header -->
+    <div class="flex justify-between items-center">
+        <h2 class="text-xl font-bold">Финансовый обзор</h2>
+        <button id="addBtn" class="text-2xl leading-none px-2 rounded-full bg-[#00E4A8] text-black shadow-md">+</button>
+    </div>
 
-  <!-- Баланс -->
-  <div class="bg-cardDark rounded-card p-4 mb-6">
-      <p class="text-sm opacity-70">Текущий баланс</p>
-      <p id="balance" class="text-3xl font-bold mt-1">0 ₸</p>
-  </div>
+    <!-- Balance Card -->
+    <div class="rounded-2xl bg-[#0C2C24] px-5 py-5 shadow-xl border border-[#0F3A2F]">
+        <p class="text-sm opacity-70 mb-1">Текущий баланс</p>
+        <p id="balance" class="text-4xl font-extrabold tracking-tight">0 ₸</p>
+    </div>
 
-  <!-- Диаграмма расходов -->
-  <div class="flex flex-col justify-center items-center mb-6">
-      <svg id="chart" width="170" height="170" viewBox="0 0 36 36">
-          <!-- Основа -->
-          <circle cx="18" cy="18" r="15.9" fill="none" stroke="#083328" stroke-width="3"/>
-          <!-- Категории — динамика -->
-          <circle id="foodArc" cx="18" cy="18" r="15.9" fill="none" stroke="#FF8C69" stroke-width="3" stroke-dasharray="0 100"/>
-          <circle id="transportArc" cx="18" cy="18" r="15.9" fill="none" stroke="#FFD700" stroke-width="3" stroke-dasharray="0 100"/>
-          <circle id="barsArc" cx="18" cy="18" r="15.9" fill="none" stroke="#8A2BE2" stroke-width="3" stroke-dasharray="0 100"/>
-          <circle id="shoppingArc" cx="18" cy="18" r="15.9" fill="none" stroke="#00CED1" stroke-width="3" stroke-dasharray="0 100"/>
-      </svg>
+    <!-- Pie chart block -->
+    <div class="rounded-2xl bg-[#0C2C24] px-5 py-6 shadow-xl border border-[#0F3A2F] text-center">
 
-      <p class="opacity-80 text-sm mt-3">Всего расходов</p>
-      <p id="totalExpenses" class="text-2xl font-bold">0 ₸</p>
-  </div>
+        <div class="flex justify-center">
+            <svg id="chart" width="200" height="200" viewBox="0 0 36 36">
+                <circle cx="18" cy="18" r="15.8" stroke="#113D32" stroke-width="3" fill="none"/>
+                <circle id="foodArc" cx="18" cy="18" r="15.8" stroke="#FF8D6F" stroke-width="3" fill="none" stroke-dasharray="0 100"/>
+                <circle id="transportArc" cx="18" cy="18" r="15.8" stroke="#FFD853" stroke-width="3" fill="none" stroke-dasharray="0 100"/>
+                <circle id="barsArc" cx="18" cy="18" r="15.8" stroke="#A46CFF" stroke-width="3" fill="none" stroke-dasharray="0 100"/>
+                <circle id="shoppingArc" cx="18" cy="18" r="15.8" stroke="#33F1CA" stroke-width="3" fill="none" stroke-dasharray="0 100"/>
+            </svg>
+        </div>
 
-  <!-- Категории -->
-  <h3 class="text-lg font-bold mb-2">Категории</h3>
+        <p class="text-sm mt-2 opacity-70">Всего расходов</p>
+        <p id="totalExpenses" class="text-3xl font-extrabold">0 ₸</p>
 
-  <div class="space-y-3" id="categories">
-    <!-- категории подставятся динамически -->
-  </div>
+    </div>
 
-  <!-- Цели -->
-  <h3 class="text-lg font-bold mt-8 mb-2">Цели накоплений</h3>
 
-  <div id="goals">
-     <!-- пока статично — позже сделаем динамически -->
-     <div class="mb-4">
-         <p class="flex justify-between text-sm">
-            <span>Подушка</span>
-            <span>120 000 / 300 000</span>
-         </p>
-         <div class="bg-gray-700 rounded-full h-2 mt-1">
-           <div class="bg-primary h-2 rounded-full" style="width: 40%;"></div>
-         </div>
-     </div>
-  </div>
+    <!-- Categories -->
+    <div>
+        <div class="text-lg font-semibold mb-3">Категории расходов</div>
+
+        <div id="categories" class="space-y-3"></div>
+    </div>
 
 </div>
+
 
 <script>
 Telegram.WebApp.ready();
@@ -96,11 +85,11 @@ document.getElementById("addBtn").onclick = () => {
     window.location.href = "expense.html";
 };
 
-// Загружаем данные
+// Load data
 fetch("https://mbzdqomfhntjgihknwfp.supabase.co/functions/v1/get-dashboard-data", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ telegram_id: user.id })
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ telegram_id: user.id })
 })
 .then(res => res.json())
 .then(data => {
@@ -113,39 +102,48 @@ fetch("https://mbzdqomfhntjgihknwfp.supabase.co/functions/v1/get-dashboard-data"
     renderPie(data.categories);
 });
 
+
 function renderCategories(list) {
     let html = "";
+
     list.forEach(el => {
         html += `
-         <div class="bg-cardDark rounded-card p-3 flex justify-between">
-            <span>${el.category}</span>
-            <strong>${el.sum} ₸</strong>
-         </div>`;
+        <div class="flex justify-between items-center bg-[#0A2922] px-4 py-4 rounded-xl shadow-lg border border-[#0F3A2F] hover:bg-[#0D3329] transition">
+            <div>
+                <p class="font-semibold text-base capitalize">${el.category}</p>
+                <p class="text-xs opacity-60">за период</p>
+            </div>
+            <p class="font-bold text-xl">${el.sum} ₸</p>
+        </div>
+        `;
     });
+
     document.getElementById("categories").innerHTML = html;
 }
 
+
 function renderPie(categories) {
     let total = categories.reduce((acc, v) => acc + v.sum, 0);
+    let offset = 25;
 
-    let offset = 0;
-    categories.forEach((c, index) => {
-        let arc = Math.round(c.sum / total * 100);
+    categories.forEach(c => {
         let id = {
-          food: "foodArc",
-          transport: "transportArc",
-          bars: "barsArc",
-          shopping: "shoppingArc"
+            food: "foodArc",
+            transport: "transportArc",
+            bars: "barsArc",
+            shopping: "shoppingArc"
         }[c.category];
 
         if (!id) return;
 
-        document.getElementById(id).setAttribute("stroke-dasharray", `${arc}, 100`);
+        let arc = Math.round((c.sum / total) * 100);
+        document.getElementById(id).setAttribute("stroke-dasharray", arc + ", 100");
         document.getElementById(id).setAttribute("stroke-dashoffset", -offset);
 
         offset += arc;
     });
 }
+
 </script>
 
 </body>
