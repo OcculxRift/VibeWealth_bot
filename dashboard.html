@@ -1,175 +1,151 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="dark">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard | VibeWealth</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="./styles-dashboard.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VibeWealth | Dashboard</title>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#00E4A8",
+            bgDark: "#07211B",
+            cardDark: "#0E332A"
+          },
+          fontFamily: {
+            main: ["Plus Jakarta Sans", "sans-serif"]
+          },
+          borderRadius: {
+            card: "20px"
+          }
+        }
+      }
+    };
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 
-<body>
+<body class="font-main bg-bgDark text-white">
 
-<div class="page">
-    <div class="header">
-        <div class="header-title">VibeWealth</div>
-        <div class="header-subtitle">Финансовый обзор</div>
-    </div>
+<div id="container" class="px-4 py-5 min-h-screen">
 
-    <div class="balance-card">
-        <div>
-            <div class="balance-label">Текущий баланс</div>
-            <div class="balance-amount" id="balanceAmount">0 ₸</div>
-        </div>
-        <button class="btn-add" id="goAddExpense">+</button>
-    </div>
+  <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-bold">Финансовый обзор</h2>
+      <button id="addBtn" class="text-3xl leading-none">+</button>
+  </div>
 
-    <div class="section-title">Расходы по категориям</div>
-    <div class="categories">
+  <!-- Баланс -->
+  <div class="bg-cardDark rounded-card p-4 mb-6">
+      <p class="text-sm opacity-70">Текущий баланс</p>
+      <p id="balance" class="text-3xl font-bold mt-1">0 ₸</p>
+  </div>
 
-        <div class="category-item">
-            <div class="category-name">Еда</div>
-            <div class="category-value" id="cat-food">0 ₸</div>
-        </div>
+  <!-- Диаграмма расходов -->
+  <div class="flex flex-col justify-center items-center mb-6">
+      <svg id="chart" width="170" height="170" viewBox="0 0 36 36">
+          <!-- Основа -->
+          <circle cx="18" cy="18" r="15.9" fill="none" stroke="#083328" stroke-width="3"/>
+          <!-- Категории — динамика -->
+          <circle id="foodArc" cx="18" cy="18" r="15.9" fill="none" stroke="#FF8C69" stroke-width="3" stroke-dasharray="0 100"/>
+          <circle id="transportArc" cx="18" cy="18" r="15.9" fill="none" stroke="#FFD700" stroke-width="3" stroke-dasharray="0 100"/>
+          <circle id="barsArc" cx="18" cy="18" r="15.9" fill="none" stroke="#8A2BE2" stroke-width="3" stroke-dasharray="0 100"/>
+          <circle id="shoppingArc" cx="18" cy="18" r="15.9" fill="none" stroke="#00CED1" stroke-width="3" stroke-dasharray="0 100"/>
+      </svg>
 
-        <div class="category-item">
-            <div class="category-name">Транспорт</div>
-            <div class="category-value" id="cat-transport">0 ₸</div>
-        </div>
+      <p class="opacity-80 text-sm mt-3">Всего расходов</p>
+      <p id="totalExpenses" class="text-2xl font-bold">0 ₸</p>
+  </div>
 
-        <div class="category-item">
-            <div class="category-name">Бары</div>
-            <div class="category-value" id="cat-bars">0 ₸</div>
-        </div>
+  <!-- Категории -->
+  <h3 class="text-lg font-bold mb-2">Категории</h3>
 
-        <div class="category-item">
-            <div class="category-name">Шоппинг</div>
-            <div class="category-value" id="cat-shopping">0 ₸</div>
-        </div>
+  <div class="space-y-3" id="categories">
+    <!-- категории подставятся динамически -->
+  </div>
 
-    </div>
+  <!-- Цели -->
+  <h3 class="text-lg font-bold mt-8 mb-2">Цели накоплений</h3>
 
-    <div class="section-title">Цели & накопления</div>
-    <div class="goals">
-
-        <div class="goal">
-            <div class="goal-header">
-                <span class="goal-title">Подушка безопасности</span>
-                <span class="goal-value">120 000 / 300 000 ₸</span>
-            </div>
-            <div class="goal-progress">
-                <div class="goal-progress-fill" style="width: 40%;"></div>
-            </div>
-        </div>
-
-        <div class="goal">
-            <div class="goal-header">
-                <span class="goal-title">Путешествие</span>
-                <span class="goal-value">40 000 / 150 000 ₸</span>
-            </div>
-            <div class="goal-progress">
-                <div class="goal-progress-fill" style="width: 27%;"></div>
-            </div>
-        </div>
-
-    </div>
+  <div id="goals">
+     <!-- пока статично — позже сделаем динамически -->
+     <div class="mb-4">
+         <p class="flex justify-between text-sm">
+            <span>Подушка</span>
+            <span>120 000 / 300 000</span>
+         </p>
+         <div class="bg-gray-700 rounded-full h-2 mt-1">
+           <div class="bg-primary h-2 rounded-full" style="width: 40%;"></div>
+         </div>
+     </div>
+  </div>
 
 </div>
 
-
 <script>
-    Telegram.WebApp.ready();
+Telegram.WebApp.ready();
+const user = Telegram.WebApp.initDataUnsafe?.user;
 
-    const tgUser = Telegram.WebApp.initDataUnsafe?.user;
-    // Показываем мгновенно старые данные, если есть
-const cachedDashboard = JSON.parse(localStorage.getItem("dashboardCache") || "null");
+document.getElementById("addBtn").onclick = () => {
+    window.location.href = "expense.html";
+};
 
-if (cachedDashboard) {
-    console.log("💾 Загружено из cache:", cachedDashboard);
-
-    document.getElementById("balanceAmount").textContent =
-        cachedDashboard.balance + " ₸";
-
-    cachedDashboard.categories.forEach(c => {
-        if (c.category === "food") {
-            document.getElementById("cat-food").textContent = c.sum + " ₸";
-        }
-        if (c.category === "transport") {
-            document.getElementById("cat-transport").textContent = c.sum + " ₸";
-        }
-        if (c.category === "bars") {
-            document.getElementById("cat-bars").textContent = c.sum + " ₸";
-        }
-        if (c.category === "shopping") {
-            document.getElementById("cat-shopping").textContent = c.sum + " ₸";
-        }
-    });
-}
-
-
-    if (!tgUser) {
-        alert("Открой Mini App через Telegram");
-    }
-
-    // ПРОСТАЯ НАВИГАЦИЯ
-    const btnAddExpense = document.getElementById("goAddExpense");
-
-    btnAddExpense.onclick = () => {
-        window.location.href = "expense.html"; // позже создадим
-    };
-    fetch("https://mbzdqomfhntjgihknwfp.supabase.co/functions/v1/get-dashboard-data", {
+// Загружаем данные
+fetch("https://mbzdqomfhntjgihknwfp.supabase.co/functions/v1/get-dashboard-data", {
   method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({ telegram_id: tgUser.id })
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ telegram_id: user.id })
 })
 .then(res => res.json())
 .then(data => {
-  console.log(data);
-    localStorage.setItem("dashboardCache", JSON.stringify(data));
+    console.log(data);
 
+    document.getElementById("balance").textContent = data.balance + " ₸";
+    document.getElementById("totalExpenses").textContent = data.total_expenses + " ₸";
 
-  // вставляем баланс на страницу
-  document.getElementById("balanceAmount").textContent =
-    data.balance + " ₸";
-    // Если есть кэшированные транзакции — применяем их
-let cached = JSON.parse(localStorage.getItem("cachedExpenses") || "[]");
+    renderCategories(data.categories);
+    renderPie(data.categories);
+});
 
-if (cached.length > 0) {
-    
-    // увеличиваем баланс на сумму локальных расходов
-    let additions = cached.reduce((acc, c) => acc + c.amount, 0);
-    
-    let current = parseInt(
-        document.getElementById("balanceAmount").textContent.replace(" ₸", "")
-    );
-
-    document.getElementById("balanceAmount").textContent =
-        (current - additions) + " ₸";
+function renderCategories(list) {
+    let html = "";
+    list.forEach(el => {
+        html += `
+         <div class="bg-cardDark rounded-card p-3 flex justify-between">
+            <span>${el.category}</span>
+            <strong>${el.sum} ₸</strong>
+         </div>`;
+    });
+    document.getElementById("categories").innerHTML = html;
 }
 
-    // категории
-data.categories.forEach(c => {
-    if (c.category === "food") {
-        document.getElementById("cat-food").textContent = c.sum + " ₸";
-    }
-    if (c.category === "transport") {
-        document.getElementById("cat-transport").textContent = c.sum + " ₸";
-    }
-    if (c.category === "bars") {
-        document.getElementById("cat-bars").textContent = c.sum + " ₸";
-    }
-    if (c.category === "shopping") {
-        document.getElementById("cat-shopping").textContent = c.sum + " ₸";
-    }
-});
+function renderPie(categories) {
+    let total = categories.reduce((acc, v) => acc + v.sum, 0);
 
-})
-.catch(() => {
-  Telegram.WebApp.showAlert("Не удалось загрузить данные");
-});
+    let offset = 0;
+    categories.forEach((c, index) => {
+        let arc = Math.round(c.sum / total * 100);
+        let id = {
+          food: "foodArc",
+          transport: "transportArc",
+          bars: "barsArc",
+          shopping: "shoppingArc"
+        }[c.category];
 
+        if (!id) return;
+
+        document.getElementById(id).setAttribute("stroke-dasharray", `${arc}, 100`);
+        document.getElementById(id).setAttribute("stroke-dashoffset", -offset);
+
+        offset += arc;
+    });
+}
 </script>
 
 </body>
