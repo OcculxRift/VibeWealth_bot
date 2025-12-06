@@ -363,44 +363,21 @@
 
 <body style="visibility: hidden; font-family: sans-serif;">
 <script>
-    Telegram.WebApp.ready();
+Telegram.WebApp.ready();
 
-    // Получаем данные пользователя
-    const user = Telegram.WebApp.initDataUnsafe?.user || null;
+// Получаем данные пользователя
+const user = Telegram.WebApp.initDataUnsafe?.user || null;
 
-    document.body.style.visibility = "visible";
+document.body.style.visibility = "visible";
 
-    // Если пользователя нет (MiniApp открыт не из Телеграма)
-    if (!user) {
-        document.body.innerHTML = "<h3>Открой приложение через Telegram</h3>";
-    } else {
-        document.body.innerHTML = `
-            <div style="padding: 20px;">
-                <h2>VibeWealth</h2>
-                <p><b>ID:</b> ${user.id}</p>
-                <p><b>Имя:</b> ${user.first_name ?? ''}</p>
-                <p><b>Username:</b> @${user.username ?? ''}</p>
+// Если пользователя нет (MiniApp открыт не из Телеграма)
+if (!user) {
+    document.body.innerHTML = "<h3>Открой приложение через Telegram</h3>";
+} else {
+    // сразу переходим в dashboard
+    window.location.href = "dashboard.html";
+}
 
-                <button id="addExpenseBtn" style="margin-top: 15px; padding: 12px; width: 100%;">
-                    Добавить расход
-                </button>
-
-                <button id="showDashboardBtn" style="margin-top: 15px; padding: 12px; width: 100%;">
-                    Перейти в дашборд
-                </button>
-            </div>
-        `;
-    
-    document.querySelector("#addExpenseBtn").onclick = () => {
-        window.location.href = "expense.html";
-    };
-
-
-    document.querySelector("#showDashboardBtn").onclick = () => {
-        window.location.href = "dashboard.html";
-    };
-
-    }
 </script>
 </body>
 
